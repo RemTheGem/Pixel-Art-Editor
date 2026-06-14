@@ -3,6 +3,8 @@
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QColorDialog>
+#include <QImage>
+#include <QFileDialog>
 
 PixelCanvas::PixelCanvas(QWidget *parent)
     : QWidget(parent)
@@ -71,4 +73,33 @@ void PixelCanvas::clear()
         }
     }
     update();
+}
+void PixelCanvas::saveImage()
+{
+    QImage image(gridSize * pixelSize, gridSize * pixelSize, QImage::Format_ARGB32);
+    image.fill(Qt::white);
+
+    QPainter painter(&image);
+
+    for (int y = 0; y<gridSize; y++){
+        for (int x = 0; x<gridSize; x++){
+            QRect rect(
+                x * pixelSize,
+                y * pixelSize,
+                pixelSize,
+                pixelSize);
+            painter.fillRect(rect, pixels[y][x]);
+        }
+    }
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save Image",
+        "",
+        "PNG Files (*.png)");
+    if(!fileName.isEmpty()){
+        if(!fileName.endsWith(".png")){
+            fileName += ".png";
+        }
+        image.save(fileName);
+    }
 }

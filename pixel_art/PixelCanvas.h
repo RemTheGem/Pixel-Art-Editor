@@ -14,6 +14,7 @@ public:
     explicit PixelCanvas(QWidget *parent = nullptr);
     void setColor(const QColor &c) {currentColor = c;}
     void clear();
+    void saveImage();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -22,8 +23,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
-    static const int gridSize = 32;
-    int pixelSize = 20;
+    static const int gridSize = 40;
+    int pixelSize = 10;
     QColor currentColor = Qt::black;
     bool isDrawing = false;
     QColor pixels[gridSize][gridSize];

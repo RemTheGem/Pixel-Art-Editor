@@ -6,6 +6,9 @@
 #include <QToolBar>
 #include <QAction>
 #include <QColorDialog>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,11 +17,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     auto canvas = new PixelCanvas(this);
-    setCentralWidget(canvas);
+    canvas->setFixedSize(800, 800);
+    QWidget *container = new QWidget(this);
+    QHBoxLayout *layout = new QHBoxLayout(container);
+
+    layout->addStretch();
+    layout->addWidget(canvas);
+    layout->addStretch();
+
+    setCentralWidget(container);
 
     QToolBar *toolbar = addToolBar("Palette");
     QAction *pickColor = toolbar->addAction("Pick Color");
     QAction *eraseBoard = toolbar->addAction("Clear Canvas");
+    QAction *saveDrawing = toolbar->addAction("Save Drawing");
 
     connect(pickColor, &QAction::triggered, [=]() {
         QColor color = QColorDialog::getColor(Qt::white, this);
@@ -28,6 +40,9 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(eraseBoard, &QAction::triggered, [=](){
         canvas->clear();
+    });
+    connect(saveDrawing, &QAction::triggered, [=]() {
+        canvas->saveImage();
     });
 }
 
