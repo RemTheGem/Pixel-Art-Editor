@@ -37,6 +37,7 @@ void PixelCanvas::paintEvent(QPaintEvent *)
 }
 void PixelCanvas::mousePressEvent(QMouseEvent *event)
 {
+    isDrawing = true;
     int x = event->position().x() / pixelSize;
     int y = event->position().y() / pixelSize;
 
@@ -45,4 +46,29 @@ void PixelCanvas::mousePressEvent(QMouseEvent *event)
         update();
     }
 
+}
+void PixelCanvas::mouseMoveEvent(QMouseEvent *event)
+{
+    if (!isDrawing) return;
+
+    int x = event->position().x() / pixelSize;
+    int y = event->position().y() / pixelSize;
+
+    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+        pixels[y][x] = currentColor;
+        update();
+    }
+}
+void PixelCanvas::mouseReleaseEvent(QMouseEvent *event)
+{
+    isDrawing = false;
+}
+void PixelCanvas::clear()
+{
+    for (int y = 0; y < gridSize; y++) {
+        for (int x = 0; x < gridSize; x++) {
+            pixels[y][x] = Qt::white;
+        }
+    }
+    update();
 }

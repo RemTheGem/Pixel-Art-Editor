@@ -18,12 +18,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     QToolBar *toolbar = addToolBar("Palette");
     QAction *pickColor = toolbar->addAction("Pick Color");
+    QAction *eraseBoard = toolbar->addAction("Clear Canvas");
 
     connect(pickColor, &QAction::triggered, [=]() {
         QColor color = QColorDialog::getColor(Qt::white, this);
         if (color.isValid()) {
             canvas->setColor(color);
         }
+    });
+    connect(eraseBoard, &QAction::triggered, [=](){
+        canvas->clear();
     });
 }
 

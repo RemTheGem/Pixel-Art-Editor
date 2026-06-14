@@ -13,16 +13,19 @@ class PixelCanvas : public QWidget
 public:
     explicit PixelCanvas(QWidget *parent = nullptr);
     void setColor(const QColor &c) {currentColor = c;}
+    void clear();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
     static const int gridSize = 32;
     int pixelSize = 20;
     QColor currentColor = Qt::black;
-
+    bool isDrawing = false;
     QColor pixels[gridSize][gridSize];
 };
 
