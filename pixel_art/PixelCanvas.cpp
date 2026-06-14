@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QPaintEvent>
+#include <QColorDialog>
 
 PixelCanvas::PixelCanvas(QWidget *parent)
     : QWidget(parent)
@@ -39,11 +40,8 @@ void PixelCanvas::mousePressEvent(QMouseEvent *event)
     int x = event->position().x() / pixelSize;
     int y = event->position().y() / pixelSize;
 
-    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize && Qt::white) {
-        if(pixels[y][x] == Qt::white)
-        pixels[y][x] = Qt::black;
-        else
-            pixels[y][x] = Qt::white;
+    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+        pixels[y][x] = currentColor;
         update();
     }
 

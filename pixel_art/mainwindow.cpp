@@ -3,6 +3,9 @@
 #include "PixelCanvas.h"
 #include <QMouseEvent>
 #include <QPaintEvent>
+#include <QToolBar>
+#include <QAction>
+#include <QColorDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,6 +15,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto canvas = new PixelCanvas(this);
     setCentralWidget(canvas);
+
+    QToolBar *toolbar = addToolBar("Palette");
+    QAction *pickColor = toolbar->addAction("Pick Color");
+
+    connect(pickColor, &QAction::triggered, [=]() {
+        QColor color = QColorDialog::getColor(Qt::white, this);
+        if (color.isValid()) {
+            canvas->setColor(color);
+        }
+    });
 }
 
 MainWindow::~MainWindow()

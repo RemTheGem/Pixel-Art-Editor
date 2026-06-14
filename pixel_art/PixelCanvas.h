@@ -12,6 +12,7 @@ class PixelCanvas : public QWidget
 
 public:
     explicit PixelCanvas(QWidget *parent = nullptr);
+    void setColor(const QColor &c) {currentColor = c;}
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -19,7 +20,8 @@ protected:
 
 private:
     static const int gridSize = 32;
-    int pixelSize = 20;  // size of each “pixel block”
+    int pixelSize = 20;
+    QColor currentColor = Qt::black;
 
     QColor pixels[gridSize][gridSize];
 };
