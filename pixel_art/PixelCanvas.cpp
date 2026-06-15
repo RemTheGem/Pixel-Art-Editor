@@ -5,6 +5,10 @@
 #include <QColorDialog>
 #include <QImage>
 #include <QFileDialog>
+#include <QPoint>
+#include <queue>
+#include <QDebug>
+
 
 PixelCanvas::PixelCanvas(QWidget *parent)
     : QWidget(parent)
@@ -52,6 +56,12 @@ void PixelCanvas::mousePressEvent(QMouseEvent *event)
         case Tool::Eraser:
             pixels[y][x] = Qt::white;
             break;
+        case Tool::EyeDropper:
+            currentColor = pixels[y][x];
+            break;
+        case Tool::Fill:
+            floodFill(x, y);
+            break;
         }
         update();
     }
@@ -71,6 +81,10 @@ void PixelCanvas::mouseMoveEvent(QMouseEvent *event)
             break;
         case Tool::Eraser:
             pixels[y][x] = Qt::white;
+            break;
+        case Tool::EyeDropper:
+            break;
+        case Tool::Fill:
             break;
         }
         update();
@@ -120,4 +134,33 @@ void PixelCanvas::saveImage()
 }
 void PixelCanvas::setTool(Tool tool){
     currentTool = tool;
+}
+void PixelCanvas::floodFill(int startX, int startY){
+    QColor target = pixels[startY][startX];
+    QColor fill = currentColor;
+    if(target == fill) return;
+    std::queue<QPoint> q;
+    qDebug() << "made q";
+    q.push(QPoint(startX, startY));
+    while (!q.empty()){
+        QPoint p = q.front();
+        q.pop();
+
+        int x = p.x();
+        int y = p.y();
+        if (x >= 0 && x < gridSize && y >= 0 && y < gridSize){
+            if(pixels[y][x] == target){
+                pixels[y][x] = currentColor;
+                qDebug() << "colored something";
+                q.push(QPoint(x+1, y));
+                q.push(QPoint(x-1, y));
+                q.push(QPoint(x, y+1));
+                q.push(QPoint(x, y-1));
+            }
+        }
+
+
+    }
+    qDebug() << "finished loop";
+
 }

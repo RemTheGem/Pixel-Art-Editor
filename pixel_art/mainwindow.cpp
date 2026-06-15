@@ -34,15 +34,21 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *saveDrawing = toolbar->addAction("Save Drawing");
     QAction *brushAction = toolbar->addAction("Brush");
     QAction *eraserAction = toolbar->addAction("Eraser");
+    QAction *eyeDropperAction = toolbar->addAction("Eye Dropper");
+    QAction *fillAction = toolbar->addAction("Fill");
     // UI
     brushAction->setChecked(true);
     brushAction->setCheckable(true);
     eraserAction->setCheckable(true);
+    eyeDropperAction->setCheckable(true);
+    fillAction->setCheckable(true);
     canvas->setTool(PixelCanvas::Tool::Brush);
     QActionGroup *toolGroup = new QActionGroup(this);
     toolGroup->setExclusive(true);
     toolGroup->addAction(brushAction);
     toolGroup->addAction(eraserAction);
+    toolGroup->addAction(eyeDropperAction);
+    toolGroup->addAction(fillAction);
 
     //Toolbar actions
     connect(pickColor, &QAction::triggered, [=]() {
@@ -62,6 +68,12 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(eraserAction, &QAction::triggered, [=](){
         canvas->setTool(PixelCanvas::Tool::Eraser);
+    });
+    connect(eyeDropperAction, &QAction::triggered, [=](){
+        canvas->setTool(PixelCanvas::Tool::EyeDropper);
+    });
+    connect(fillAction, &QAction::triggered, [=](){
+        canvas->setTool(PixelCanvas::Tool::Fill);
     });
 }
 

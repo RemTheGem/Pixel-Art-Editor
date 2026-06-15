@@ -19,9 +19,12 @@ public:
 
     enum class Tool {
         Brush,
-        Eraser
+        Eraser,
+        EyeDropper,
+        Fill
     };
     void setTool(Tool tool);
+    void floodFill(int x, int y);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
