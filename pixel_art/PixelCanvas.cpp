@@ -140,7 +140,6 @@ void PixelCanvas::floodFill(int startX, int startY){
     QColor fill = currentColor;
     if(target == fill) return;
     std::queue<QPoint> q;
-    qDebug() << "made q";
     q.push(QPoint(startX, startY));
     while (!q.empty()){
         QPoint p = q.front();
@@ -151,7 +150,6 @@ void PixelCanvas::floodFill(int startX, int startY){
         if (x >= 0 && x < gridSize && y >= 0 && y < gridSize){
             if(pixels[y][x] == target){
                 pixels[y][x] = currentColor;
-                qDebug() << "colored something";
                 q.push(QPoint(x+1, y));
                 q.push(QPoint(x-1, y));
                 q.push(QPoint(x, y+1));
@@ -161,6 +159,6 @@ void PixelCanvas::floodFill(int startX, int startY){
 
 
     }
-    qDebug() << "finished loop";
+
 
 }

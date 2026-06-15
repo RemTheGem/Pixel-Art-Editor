@@ -51,3 +51,10 @@
 30	1485	1781530147362866670	CMakeFiles/pixel_art.dir/mainwindow.cpp.o	4af4d8abbdb715a5
 30	1680	1781530147363672811	CMakeFiles/pixel_art.dir/PixelCanvas.cpp.o	ce9eb5ca1231275b
 1680	1892	1781530149012860216	pixel_art	9920175b0c0184ee
+2	27	1781530718167231126	pixel_art_autogen/timestamp	a2f98750ac48dab7
+2	27	1781530718167231126	pixel_art_autogen/mocs_compilation.cpp	a2f98750ac48dab7
+2	27	1781530718167231126	/home/rem/programming/pixel_art/pixel_art/build/Desktop-Debug/pixel_art_autogen/timestamp	a2f98750ac48dab7
+2	27	1781530718167231126	/home/rem/programming/pixel_art/pixel_art/build/Desktop-Debug/pixel_art_autogen/mocs_compilation.cpp	a2f98750ac48dab7
+28	1415	1781530718193231070	CMakeFiles/pixel_art.dir/mainwindow.cpp.o	4af4d8abbdb715a5
+28	1603	1781530718193665270	CMakeFiles/pixel_art.dir/PixelCanvas.cpp.o	ce9eb5ca1231275b
+1603	1802	1781530719768227703	pixel_art	9920175b0c0184ee
