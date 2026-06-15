@@ -8,6 +8,16 @@ A simple Desktop application (also under construction) built with Qt and C++ to 
 - Select tool (Brush, Eraser, Eye Dropper, Fill)
 - More on the way!! (If i dont forget about this)
 
+<img src="images/demo.png" width="600"/>
+
+## Made in Pixel Art Editor
+
+(I can't draw for the life of me lol but i hope you can!)
+
+<p float="left">
+<img src="images/clown.png" width="45%" height="620"/><img src="images/tree.png" width="45%" height="620"/>
+</p>
+
 ## Coming Soon
 - Undo/Redo
 - Save Drawing in more formats
@@ -15,6 +25,7 @@ A simple Desktop application (also under construction) built with Qt and C++ to 
 - Brush sizes
 - Memory Optimization
 - and more! (No promises) 
+
 
 ## Clone the Repository
 ```bash
