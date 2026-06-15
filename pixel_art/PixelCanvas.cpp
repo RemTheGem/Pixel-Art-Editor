@@ -33,18 +33,26 @@ void PixelCanvas::paintEvent(QPaintEvent *)
                 );
 
             painter.fillRect(rect, pixels[y][x]);
-            painter.drawRect(rect); // grid lines
+            painter.drawRect(rect);
         }
     }
 }
 void PixelCanvas::mousePressEvent(QMouseEvent *event)
 {
     isDrawing = true;
+
     int x = event->position().x() / pixelSize;
     int y = event->position().y() / pixelSize;
 
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
-        pixels[y][x] = currentColor;
+        switch(currentTool){
+        case Tool::Brush:
+            pixels[y][x] = currentColor;
+            break;
+        case Tool::Eraser:
+            pixels[y][x] = Qt::white;
+            break;
+        }
         update();
     }
 
@@ -57,7 +65,14 @@ void PixelCanvas::mouseMoveEvent(QMouseEvent *event)
     int y = event->position().y() / pixelSize;
 
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
-        pixels[y][x] = currentColor;
+        switch(currentTool){
+        case Tool::Brush:
+            pixels[y][x] = currentColor;
+            break;
+        case Tool::Eraser:
+            pixels[y][x] = Qt::white;
+            break;
+        }
         update();
     }
 }
@@ -102,4 +117,7 @@ void PixelCanvas::saveImage()
         }
         image.save(fileName);
     }
+}
+void PixelCanvas::setTool(Tool tool){
+    currentTool = tool;
 }

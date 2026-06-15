@@ -10,11 +10,18 @@ class PixelCanvas : public QWidget
 {
     Q_OBJECT
 
+
 public:
     explicit PixelCanvas(QWidget *parent = nullptr);
     void setColor(const QColor &c) {currentColor = c;}
     void clear();
     void saveImage();
+
+    enum class Tool {
+        Brush,
+        Eraser
+    };
+    void setTool(Tool tool);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -28,6 +35,9 @@ private:
     QColor currentColor = Qt::black;
     bool isDrawing = false;
     QColor pixels[gridSize][gridSize];
+    Tool currentTool = Tool::Brush;
+
 };
+
 
 #endif // PIXELCANVAS_H
