@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *eraserAction = toolbar->addAction("Eraser");
     QAction *eyeDropperAction = toolbar->addAction("Eye Dropper");
     QAction *fillAction = toolbar->addAction("Fill");
+    QAction *undo = toolbar->addAction("Undo");
+    QAction *redo = toolbar->addAction("Redo");
     // UI
     brushAction->setChecked(true);
     brushAction->setCheckable(true);
@@ -75,6 +77,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(fillAction, &QAction::triggered, [=](){
         canvas->setTool(PixelCanvas::Tool::Fill);
     });
+    connect(undo, &QAction::triggered, [=](){
+        canvas->undo();
+    });
+    connect(redo, &QAction::triggered, [=](){
+        canvas->redo();
+    });
+
 }
 
 MainWindow::~MainWindow()

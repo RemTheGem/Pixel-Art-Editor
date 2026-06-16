@@ -13,13 +13,12 @@
 PixelCanvas::PixelCanvas(QWidget *parent)
     : QWidget(parent)
 {
-
     for (int y = 0; y < gridSize; y++) {
         for (int x = 0; x < gridSize; x++) {
-            pixels[y][x] = Qt::white;
+            currentState.pixels[y][x] = Qt::white;
         }
     }
-
+    CanvasState emptyState = currentState;
     setMouseTracking(true);
 }
 void PixelCanvas::paintEvent(QPaintEvent *)
@@ -36,7 +35,7 @@ void PixelCanvas::paintEvent(QPaintEvent *)
                 pixelSize
                 );
 
-            painter.fillRect(rect, pixels[y][x]);
+            painter.fillRect(rect, currentState.pixels[y][x]);
             painter.drawRect(rect);
         }
     }
@@ -51,13 +50,13 @@ void PixelCanvas::mousePressEvent(QMouseEvent *event)
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
         switch(currentTool){
         case Tool::Brush:
-            pixels[y][x] = currentColor;
+            currentState.pixels[y][x] = currentColor;
             break;
         case Tool::Eraser:
-            pixels[y][x] = Qt::white;
+            currentState.pixels[y][x] = Qt::white;
             break;
         case Tool::EyeDropper:
-            currentColor = pixels[y][x];
+            currentColor = currentState.pixels[y][x];
             break;
         case Tool::Fill:
             floodFill(x, y);
@@ -77,14 +76,10 @@ void PixelCanvas::mouseMoveEvent(QMouseEvent *event)
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
         switch(currentTool){
         case Tool::Brush:
-            pixels[y][x] = currentColor;
+            currentState.pixels[y][x] = currentColor;
             break;
         case Tool::Eraser:
-            pixels[y][x] = Qt::white;
-            break;
-        case Tool::EyeDropper:
-            break;
-        case Tool::Fill:
+            currentState.pixels[y][x] = Qt::white;
             break;
         }
         update();
@@ -93,12 +88,19 @@ void PixelCanvas::mouseMoveEvent(QMouseEvent *event)
 void PixelCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     isDrawing = false;
+    redoStack.clear();
+    if(undoStack.size() <= maxUndo){
+    undoStack.push_back(currentState);
+    }
+    else{
+
+    }
 }
 void PixelCanvas::clear()
 {
     for (int y = 0; y < gridSize; y++) {
         for (int x = 0; x < gridSize; x++) {
-            pixels[y][x] = Qt::white;
+            currentState.pixels[y][x] = Qt::white;
         }
     }
     update();
@@ -117,7 +119,7 @@ void PixelCanvas::saveImage()
                 y * pixelSize,
                 pixelSize,
                 pixelSize);
-            painter.fillRect(rect, pixels[y][x]);
+            painter.fillRect(rect, currentState.pixels[y][x]);
         }
     }
     QString fileName = QFileDialog::getSaveFileName(
@@ -136,7 +138,7 @@ void PixelCanvas::setTool(Tool tool){
     currentTool = tool;
 }
 void PixelCanvas::floodFill(int startX, int startY){
-    QColor target = pixels[startY][startX];
+    QColor target = currentState.pixels[startY][startX];
     QColor fill = currentColor;
     if(target == fill) return;
     std::queue<QPoint> q;
@@ -148,8 +150,8 @@ void PixelCanvas::floodFill(int startX, int startY){
         int x = p.x();
         int y = p.y();
         if (x >= 0 && x < gridSize && y >= 0 && y < gridSize){
-            if(pixels[y][x] == target){
-                pixels[y][x] = currentColor;
+            if(currentState.pixels[y][x] == target){
+                currentState.pixels[y][x] = currentColor;
                 q.push(QPoint(x+1, y));
                 q.push(QPoint(x-1, y));
                 q.push(QPoint(x, y+1));
@@ -159,6 +161,16 @@ void PixelCanvas::floodFill(int startX, int startY){
 
 
     }
-
-
+}
+void PixelCanvas::undo(){
+    if(!undoStack.empty()){
+        qDebug() << "wtf";
+    redoStack.push_back(currentState);
+    currentState = undoStack.back();
+    undoStack.pop_back();
+    }
+    update();
+}
+void PixelCanvas::redo(){
+    currentState = redoStack.back();
 }

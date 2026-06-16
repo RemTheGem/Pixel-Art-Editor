@@ -25,6 +25,8 @@ public:
     };
     void setTool(Tool tool);
     void floodFill(int x, int y);
+    void undo();
+    void redo();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -37,8 +39,15 @@ private:
     int pixelSize = 10;
     QColor currentColor = Qt::black;
     bool isDrawing = false;
-    QColor pixels[gridSize][gridSize];
+    struct CanvasState{
+        QColor pixels[gridSize][gridSize];
+    };
     Tool currentTool = Tool::Brush;
+    CanvasState emptyState;
+    CanvasState currentState;
+    std::vector<CanvasState> undoStack;
+    std::vector<CanvasState> redoStack;
+    int maxUndo = 5;
 
 };
 
