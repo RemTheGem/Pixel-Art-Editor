@@ -29,15 +29,17 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(container);
     // Toolbar
     QToolBar *toolbar = addToolBar("Palette");
-    QAction *pickColor = toolbar->addAction("Pick Color");
-    QAction *eraseBoard = toolbar->addAction("Clear Canvas");
-    QAction *saveDrawing = toolbar->addAction("Save Drawing");
     QAction *brushAction = toolbar->addAction("Brush");
     QAction *eraserAction = toolbar->addAction("Eraser");
     QAction *eyeDropperAction = toolbar->addAction("Eye Dropper");
     QAction *fillAction = toolbar->addAction("Fill");
+    toolbar->addSeparator();
+    QAction *pickColor = toolbar->addAction("Pick Color");
+    toolbar->addSeparator();
     QAction *undo = toolbar->addAction("Undo");
     QAction *redo = toolbar->addAction("Redo");
+    QAction *eraseBoard = toolbar->addAction("Clear Canvas");
+    QAction *saveDrawing = toolbar->addAction("Save Drawing");
     // UI
     brushAction->setChecked(true);
     brushAction->setCheckable(true);
@@ -52,6 +54,15 @@ MainWindow::MainWindow(QWidget *parent)
     toolGroup->addAction(eyeDropperAction);
     toolGroup->addAction(fillAction);
 
+    // keyboard shortcuts
+    pickColor->setShortcut(QKeySequence("Ctrl+W"));
+    undo->setShortcut(QKeySequence("Ctrl+Z"));
+    redo->setShortcut(QKeySequence("Ctrl+Y"));
+    saveDrawing->setShortcut(QKeySequence("Ctrl+S"));
+    brushAction->setShortcut(QKeySequence("B"));
+    eraserAction->setShortcut(QKeySequence("E"));
+    eyeDropperAction->setShortcut(QKeySequence("I"));
+    fillAction->setShortcut(QKeySequence("F"));
     //Toolbar actions
     connect(pickColor, &QAction::triggered, [=]() {
         QColor color = QColorDialog::getColor(Qt::white, this);
