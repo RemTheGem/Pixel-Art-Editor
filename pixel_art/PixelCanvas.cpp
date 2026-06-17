@@ -40,6 +40,28 @@ void PixelCanvas::paintEvent(QPaintEvent *)
         }
     }
 }
+ColorPreviewWidget::ColorPreviewWidget(QWidget *parent){
+
+}
+void ColorPreviewWidget::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    QRect rect(
+        0,
+        0,
+        previewSize,
+        previewSize
+        );
+    painter.setPen(Qt::black);
+    painter.fillRect(rect, selectedColor);
+    painter.drawRect(rect);
+
+}
+void ColorPreviewWidget::setColor(const QColor &color){
+    selectedColor = color;
+    update();
+}
+
 void PixelCanvas::mousePressEvent(QMouseEvent *event)
 {
     isDrawing = true;
@@ -63,6 +85,7 @@ void PixelCanvas::mousePressEvent(QMouseEvent *event)
             break;
         case Tool::EyeDropper:
             currentColor = currentState.pixels[y][x];
+            emit colorChanged(currentColor);
             break;
         case Tool::Fill:
             floodFill(x, y);
@@ -170,7 +193,6 @@ void PixelCanvas::undo(){
     redoStack.push_back(currentState);
     undoStack.pop_back();
     currentState = undoStack.back();
-    qDebug() << "Ola";
     }
     update();
 }
@@ -192,4 +214,7 @@ void PixelCanvas::undoActions(){
     else{
         undoStack.push_back(currentState);
     }
+}
+QColor PixelCanvas::getColor(){
+    return currentColor;
 }

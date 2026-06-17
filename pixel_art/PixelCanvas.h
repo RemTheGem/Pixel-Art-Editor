@@ -31,6 +31,7 @@ public:
 
     // helper methods
     void undoActions();
+    QColor getColor();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -53,8 +54,24 @@ private:
     std::deque<CanvasState> undoStack;
     std::deque<CanvasState> redoStack;
     int maxUndo = 5;
-
+signals:
+    void colorChanged(QColor color);
 };
 
+class ColorPreviewWidget : public QWidget{
+  Q_OBJECT
+
+
+  int previewSize = 20;
+  protected:
+
+  void paintEvent(QPaintEvent *event) override;
+  public:
+    explicit ColorPreviewWidget(QWidget *parent = nullptr);
+    QColor selectedColor = Qt::black;
+    void setColor(const QColor &color);
+
+
+};
 
 #endif // PIXELCANVAS_H

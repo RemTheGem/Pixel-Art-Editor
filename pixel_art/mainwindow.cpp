@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     auto canvas = new PixelCanvas(this);
+    auto colorPreview = new ColorPreviewWidget(this);
     canvas->setFixedSize(800, 800);
     QWidget *container = new QWidget(this);
     QHBoxLayout *layout = new QHBoxLayout(container);
@@ -35,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *fillAction = toolbar->addAction("Fill");
     toolbar->addSeparator();
     QAction *pickColor = toolbar->addAction("Pick Color");
+    colorPreview->setFixedSize(20,20);
+    toolbar->addWidget(colorPreview);
     toolbar->addSeparator();
     QAction *undo = toolbar->addAction("Undo");
     QAction *redo = toolbar->addAction("Redo");
@@ -68,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent)
         QColor color = QColorDialog::getColor(Qt::white, this);
         if (color.isValid()) {
             canvas->setColor(color);
+            colorPreview->selectedColor = canvas->getColor();
+            update();
         }
     });
     connect(eraseBoard, &QAction::triggered, [=](){
@@ -94,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(redo, &QAction::triggered, [=](){
         canvas->redo();
     });
+    connect(canvas, &PixelCanvas::colorChanged, colorPreview, &ColorPreviewWidget::setColor);
 
 }
 
