@@ -6,9 +6,10 @@ A simple Desktop application (also under construction) built with Qt and C++ to 
 - Clear Canvas
 - Save Drawing (PNG only for now)
 - Select tool (Brush, Eraser, Eye Dropper, Fill)
+- Undo/Redo
 - More on the way!! (If i dont forget about this)
 
-<img src="images/demo.png" width="600"/>
+<img src="images/remTheGem.png" width="600"/>
 
 ## Made in Pixel Art Editor
 
@@ -19,7 +20,7 @@ A simple Desktop application (also under construction) built with Qt and C++ to 
 </p>
 
 ## Coming Soon
-- Undo/Redo
+- Undo/Redo (done)
 - Save Drawing in more formats
 - Reload old art
 - Brush sizes
