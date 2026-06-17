@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QMouseEvent>
 #include <QPaintEvent>
+#include <deque>
 
 class PixelCanvas : public QWidget
 {
@@ -28,6 +29,9 @@ public:
     void undo();
     void redo();
 
+    // helper methods
+    void undoActions();
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -39,14 +43,15 @@ private:
     int pixelSize = 10;
     QColor currentColor = Qt::black;
     bool isDrawing = false;
+    bool isUndoing = false;
     struct CanvasState{
         QColor pixels[gridSize][gridSize];
     };
     Tool currentTool = Tool::Brush;
-    CanvasState emptyState;
     CanvasState currentState;
-    std::vector<CanvasState> undoStack;
-    std::vector<CanvasState> redoStack;
+    CanvasState undoState;
+    std::deque<CanvasState> undoStack;
+    std::deque<CanvasState> redoStack;
     int maxUndo = 5;
 
 };

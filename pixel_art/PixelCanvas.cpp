@@ -18,7 +18,7 @@ PixelCanvas::PixelCanvas(QWidget *parent)
             currentState.pixels[y][x] = Qt::white;
         }
     }
-    CanvasState emptyState = currentState;
+    undoStack.push_back(currentState);
     setMouseTracking(true);
 }
 void PixelCanvas::paintEvent(QPaintEvent *)
@@ -43,6 +43,12 @@ void PixelCanvas::paintEvent(QPaintEvent *)
 void PixelCanvas::mousePressEvent(QMouseEvent *event)
 {
     isDrawing = true;
+    // make sure you don't overwrite on the old canvas. if you do, it leads to both actions being on the same canvas and any subsequent undos undoes both.
+    if(isUndoing){
+        undoStack.push_back(currentState);
+        isUndoing = false;
+    }
+
 
     int x = event->position().x() / pixelSize;
     int y = event->position().y() / pixelSize;
@@ -62,6 +68,7 @@ void PixelCanvas::mousePressEvent(QMouseEvent *event)
             floodFill(x, y);
             break;
         }
+
         update();
     }
 
@@ -82,19 +89,14 @@ void PixelCanvas::mouseMoveEvent(QMouseEvent *event)
             currentState.pixels[y][x] = Qt::white;
             break;
         }
+
         update();
     }
 }
 void PixelCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     isDrawing = false;
-    redoStack.clear();
-    if(undoStack.size() <= maxUndo){
-    undoStack.push_back(currentState);
-    }
-    else{
-
-    }
+    undoActions();
 }
 void PixelCanvas::clear()
 {
@@ -163,14 +165,31 @@ void PixelCanvas::floodFill(int startX, int startY){
     }
 }
 void PixelCanvas::undo(){
-    if(!undoStack.empty()){
-        qDebug() << "wtf";
+    if(undoStack.size() > 1){
+        isUndoing = true;
     redoStack.push_back(currentState);
-    currentState = undoStack.back();
     undoStack.pop_back();
+    currentState = undoStack.back();
+    qDebug() << "Ola";
     }
     update();
 }
 void PixelCanvas::redo(){
-    currentState = redoStack.back();
+    if(!redoStack.empty()){
+        currentState = redoStack.back();
+        undoStack.push_back(currentState);
+        redoStack.pop_back();
+    }
+    update();
+}
+void PixelCanvas::undoActions(){
+
+    redoStack.clear();
+    if(undoStack.size() >= maxUndo){
+        undoStack.pop_front();
+        undoStack.push_back(currentState);
+    }
+    else{
+        undoStack.push_back(currentState);
+    }
 }
