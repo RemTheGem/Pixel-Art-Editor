@@ -8,6 +8,10 @@
 #include <QPoint>
 #include <queue>
 #include <QDebug>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 
 PixelCanvas::PixelCanvas(QWidget *parent)
@@ -158,6 +162,66 @@ void PixelCanvas::saveImage()
         }
         image.save(fileName);
     }
+}
+void PixelCanvas::saveProject(){
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save Project",
+        "",
+        "Pixel Project (*.json)");
+    if(!fileName.isEmpty()){
+        if(!fileName.endsWith(".json")){
+            fileName += ".json";
+        }
+    }
+    else return;
+
+    QJsonObject root;
+    QJsonArray pixelMap;
+
+    for(int y =0; y <gridSize; y++){
+        for (int x =0; x <gridSize; x++){
+            QColor color = currentState.pixels[y][x];
+
+            pixelMap.append(color.name());
+
+        }
+    }
+    root["gridSize"] = gridSize;
+    root["pixels"] = pixelMap;
+
+    QJsonDocument doc(root);
+    QFile file(fileName);
+    if(file.open(QIODevice::WriteOnly)){
+        file.write(doc.toJson());
+        file.close();
+    }
+}
+void PixelCanvas::loadProject(){
+    QString fileName = QFileDialog::getOpenFileName(
+        this,
+        "Load Project",
+        "",
+        "Pixel Project (*.json)");
+    if(fileName.isEmpty()) return;
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly)) return;
+
+    QByteArray data = file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject root = doc.object();
+    QJsonArray pixelMap = root["pixels"].toArray();
+
+    int index = 0;
+    for(int y =0; y<gridSize; y++){
+        for(int x=0; x<gridSize; x++){
+            QString colorString = pixelMap[index].toString();
+            currentState.pixels[y][x] = QColor(colorString);
+            index++;
+        }
+    }
+    update();
 }
 void PixelCanvas::setTool(Tool tool){
     currentTool = tool;

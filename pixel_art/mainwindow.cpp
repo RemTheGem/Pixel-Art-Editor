@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *eraserAction = toolbar->addAction("Eraser");
     QAction *eyeDropperAction = toolbar->addAction("Eye Dropper");
     QAction *fillAction = toolbar->addAction("Fill");
-    toolbar->addSeparator();
+
     QAction *pickColor = toolbar->addAction("Pick Color");
     colorPreview->setFixedSize(20,20);
     toolbar->addWidget(colorPreview);
@@ -42,7 +42,10 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *undo = toolbar->addAction("Undo");
     QAction *redo = toolbar->addAction("Redo");
     QAction *eraseBoard = toolbar->addAction("Clear Canvas");
+    toolbar->addSeparator();
     QAction *saveDrawing = toolbar->addAction("Save Drawing");
+    QAction *saveProject = toolbar->addAction("Save Project");
+    QAction *loadProject = toolbar->addAction("Load Project");
     // UI
     brushAction->setChecked(true);
     brushAction->setCheckable(true);
@@ -100,6 +103,12 @@ MainWindow::MainWindow(QWidget *parent)
         canvas->redo();
     });
     connect(canvas, &PixelCanvas::colorChanged, colorPreview, &ColorPreviewWidget::setColor);
+    connect(saveProject, &QAction::triggered, [=](){
+        canvas->saveProject();
+    });
+    connect(loadProject, &QAction::triggered, [=](){
+        canvas->loadProject();
+    });
 
 }
 

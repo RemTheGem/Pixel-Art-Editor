@@ -17,6 +17,8 @@ public:
     void setColor(const QColor &c) {currentColor = c;}
     void clear();
     void saveImage();
+    void saveProject();
+    void loadProject();
 
     enum class Tool {
         Brush,
@@ -57,6 +59,8 @@ private:
 signals:
     void colorChanged(QColor color);
 };
+
+
 
 class ColorPreviewWidget : public QWidget{
   Q_OBJECT
